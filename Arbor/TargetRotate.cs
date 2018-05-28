@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿/// <summary>
+@file   TargetRotate.cs
+@brief  敵がプレイヤーの方向を向く処理
+@author 齊藤未来
+@details　Arbor上でしか使えないので注意
+/// </summary>
+
+using UnityEngine;
 using System.Collections;
 using Arbor;
 
 public class TargetRotate : StateBehaviour {
-
-    [SerializeField]
-    private Transform targetObject;
-
     private Vector3 target;
 
     [SerializeField]
@@ -18,42 +21,22 @@ public class TargetRotate : StateBehaviour {
 
     public string rightName;
     public string leftName;
-    public bool isTackle;
 
     Animator anim;
 
     public override void OnStateBegin()
     {
         anim = GetComponent<Animator>();
-        targetObject = GameObject.FindGameObjectWithTag("Player").transform;
-        target = targetObject.position;
+        // プレイヤーの座標を取得
+        target = GameObject.FindGameObjectWithTag("Player").transform.position;
     }
-
-
-    // Use this for initialization
-    void Start () {
-        
-	}
-
-	// Use this for awake state
-	public override void OnStateAwake() {
-	}
-
-	// Use this for enter state
-	
-
-	// Use this for exit state
-	public override void OnStateEnd() {
-	}
 
     // Update is called once per frame
     void Update() {
-        //target = targetObject.position;
-
-
+        // プレイヤーの方向を取得
         Vector3 vec = new Vector3(target.x, 0, target.z) - new Vector3(transform.position.x, 0, transform.position.z);
 
-
+        // プレイヤーの方向に対して自分の向きの差がangleOffset以下の場合次の処理へ
         if (Vector3.Angle(vec.normalized, transform.forward) <= angleOffset)
         {
             Transition(NextScene);
@@ -62,40 +45,20 @@ public class TargetRotate : StateBehaviour {
         }
         else
         {
+            // 回転はアニメーションでしている
+
+            // 右回転
             if (vec.x>=angleOffset)
             {
                 anim.SetBool(leftName, false);
                 anim.SetBool(rightName, true);
-
-
-                //Debug.Log("Right");
             }
+            // 左回転
             else if((vec.x<=angleOffset))
             {
                 anim.SetBool(rightName, false);
                 anim.SetBool(leftName, true);
-
-                //Debug.Log("Left");
             }
-            if(!isTackle)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(vec.x,0f,vec.z)), RotateTime * Time.deltaTime);
-            }
-
-            //Debug.Log(Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(vec.x,0f,vec.z)), RotateTime * Time.deltaTime));
         }
-
-
-
-
     }
-
-
-    private bool _checkClockwise(float current, float istarget)
-    {
-        return istarget > current ? !(istarget - current > 180f)
-                              : current - istarget > 180f;
-    }
-
-
 }

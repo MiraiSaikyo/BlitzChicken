@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   TimeDestroy.cs
+@brief  生成されてから指定した時間でオブジェクトを消す
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

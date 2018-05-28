@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   AnimationSpeedManager.cs
+@brief  ヒットストップを操りし者
+@author 齊藤未来
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,9 +35,7 @@ public class AnimationSpeedManager : MonoBehaviour {
             anim.speed = speed;
         }
     }
-
-
-    void s()
+    void startHitStop()
     {
         if (isHitStop)
         {
@@ -43,9 +48,9 @@ public class AnimationSpeedManager : MonoBehaviour {
     }
     public IEnumerator attackHitStop(Animator animator, float stopTime)// ヒットストップ
     {
-        animator.speed = 0.1f;
+        animator.speed = 0.1f; // アニメーションの再生スピードを落とす
         yield return new WaitForSeconds(stopTime);
-        animator.speed = 1f;
+        animator.speed = 1f; // アニメーションの再生スピードを戻す
         isHitStop = false;
     }
 }

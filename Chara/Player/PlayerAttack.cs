@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   Player_Attack.cs
+@brief  プレイヤーの蹴る処理
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,9 +12,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerAttack : MonoBehaviour
 {
-    public int attackPower;
-    //[SerializeField, Range(1, 9)]
-    public float anglePercent = 1, scalePersent = 1;
+    public int attackPower; // 直接蹴った攻撃力　友達の攻撃力とは関係ない
+    // 友達の飛んでいく向き
+    public float anglePercent = 1, scalePersent = 1; 
     float angle;
     float scale;
 
@@ -51,23 +57,7 @@ public class PlayerAttack : MonoBehaviour
             StartCoroutine(DestroyHit());
         }
     }
-    void Update()
-    {
-        if(isCharge)
-        {
-            if(!Input.GetButton("Fire1")&&(!flag))
-            {
-                Mathf.Clamp(power,10f,attackPower);
-                flag=true;
-                StartCoroutine(DestroyHit());
-
-            }
-            else
-            {
-                power++;
-            }
-        }
-    }
+    
     protected virtual IEnumerator DestroyHit()
     {
         switch(shot)
@@ -82,26 +72,13 @@ public class PlayerAttack : MonoBehaviour
             Upper();
             break;
         }
-
-        // Vector3 vec;
-        // float _x = Random.Range(-rand, rand);
-        // vec = transform.forward * 5 + new Vector3(_x, 0);   
-        
-        // FormationPosition find=GameObject.FindGameObjectWithTag("Formation").GetComponent<FormationPosition>();
-        // for(int i=0;i<length;i++)
-        // {
-        //     find.list[i].GetComponent<TargetMove>().AttackSwitching(vec,angle,scale);
-        // }
-        // ps.isHitStop = true;
-
         yield return null;
         Destroy(gameObject);
     }
 
-
     protected virtual void OnTriggerEnter(Collider c)
     {
-
+        // 敵を直接蹴る
         if (c.tag == "Enemy")
         {
             c.GetComponent<Enemy_ChildParts>().OnDamage(attackPower);
@@ -128,19 +105,14 @@ public class PlayerAttack : MonoBehaviour
         }
         float _x = Random.Range(-rand, rand);
         Vector3 vec;
-        //vec = (c.ClosestPoint(c.transform.position) - transform.root.gameObject.transform.position).normalized;
-        //if (ps.isAds)
-        //{
-        //    vec = Camera.main.transform.forward * 5 + new Vector3(_x, 0);
-        //}
-        //else
-        {
-            vec = transform.forward * 5 + new Vector3(_x, 0);
-        }
-        var chicken = hit.GetComponent<TargetMove>();
-        //chicken.AttackSwitching(transform.position,vec, angle, scale);
-   
+        vec = transform.forward * 5 + new Vector3(_x, 0);
+
+        var chicken = hit.GetComponent<TargetMove>();   
     }
+
+    // 
+    // 敵を蹴った時の処理
+    // 普通の蹴り
     void Normal()
     {
         Collider[] hitColliders = 
@@ -160,15 +132,14 @@ public class PlayerAttack : MonoBehaviour
 
             for(int i=0;i<value;i++)
             {
-            //float sendScale=scale*(((float)i+1)/value);
-            //float sendAngle=-GameObject.FindGameObjectWithTag("CameraParent").transform.localEulerAngles.x;
-            // Debug.Log(sendAngle);
                 float randX=Random.Range(-rand,rand);
                 Vector3 vec =new Vector3(0,randX,0);
                 hitColliders[i].GetComponent<TargetMove>().AttackSwitching(transform.position,transform.forward,vec,angle,scale);
             }
         }
     } 
+
+    // 拡散
    void Diffusion(float spread)
    {
          Collider[] hitColliders = 
@@ -195,12 +166,12 @@ public class PlayerAttack : MonoBehaviour
          }
    }
 
+   // 蹴り上げ
    void Upper(){
        Collider[] hitColliders = 
        Physics.OverlapBox(transform.position,transform.lossyScale,Quaternion.identity,mask);
        for(int i=0;i<hitColliders.Length;i++)
-        {
-            
+        {     
             hitColliders[i].GetComponent<TargetMove>().AttackSwitching(angle,scale);
         }
     }

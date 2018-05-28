@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/// <summary>
+@file   LockOnDetector.cs
+@brief  敵をロックオンする処理
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,41 +17,28 @@ public class LockOnDetector : MonoBehaviour {
 
             if (target == null)
             {
+                // LockOnListからリストを取得してロックオンする対象を決める
                 target = c.gameObject.GetComponent<LockOnList>().lockParts[value];
                 c.gameObject.GetComponent<LockOnList>().value = value;
                 //Debug.Log("targetCheck");
             }
 
-
-
+            //　ロックオンする対象が変わる
             if (Input.GetButton("R_Button"))
             {
                 ++value;
             }
-
-            //if(Input.GetAxis("Mouse X")>=0.9)
-            //{
-            //    ++value;
-            //}
-            //else if(Input.GetAxis("Mouse X") <= -0.9)
-            //{
-            //    --value;
-
-            //}
+            // valueの数値が配列数より大きくなったら
             if (value >= c.gameObject.GetComponent<LockOnList>().lockParts.Length)
             {
                 value = 0;
             }
-            if (value <= -1)
-            {
-                value = c.gameObject.GetComponent<LockOnList>().lockParts.Length-1;
-            }
-
         }
     }
     void OnTriggerExit(Collider c)
     {
         {
+            // 範囲外だったらロックオンを解除する
             if(c.gameObject)
             {
                 target = null;

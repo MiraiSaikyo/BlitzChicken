@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   FormationPosition.cs
+@brief  鶏がプレイヤーに付いてくる処理
+@author 齊藤未来
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,7 +13,7 @@ using System.Linq;
 
 public class FormationPosition : MonoBehaviour {
 
-    public GameObject targetPos;
+    public GameObject targetPos;　
     public float distance;
 
     public Transform FormationPos;
@@ -25,7 +32,9 @@ public class FormationPosition : MonoBehaviour {
     {
         chickenLength = list.Count;
 
-
+        //
+        //自分の配列番号の座標に移動する
+        // プレイヤーがADSモードになると鶏たちの間隔が狭くなる
         if(targetPos.GetComponent<Player_State>().isAds)
         {
             FormationPos.position = Vector3.Lerp(FormationPos.position, 
@@ -35,7 +44,7 @@ public class FormationPosition : MonoBehaviour {
         }
         else
         {
-                        FormationPos.position = Vector3.Lerp(FormationPos.position, 
+            FormationPos.position = Vector3.Lerp(FormationPos.position, 
             adsPoint.position+new Vector3(0,0.3f), 100 * Time.deltaTime);
             FormationPos.LookAt(adsPoint);
 
@@ -43,15 +52,18 @@ public class FormationPosition : MonoBehaviour {
             offset =0.3f;
         }
 
+
+        // プレイヤーの移動に少し遅れて追従する
         Vector3 Apos = FormationPos.position;
         Vector3 Bpos = targetPos.transform.position;
         float dis = Vector3.Distance(Apos, Bpos);
-
         if (dis > distance)
         {
             FormationPos.position = Vector3.Lerp(FormationPos.position, targetPos.transform.position, 10*Time.deltaTime);
         }
         list.Distinct().ToArray();
+        
+        // 鶏が配列から抜けた時の処理
         for (int i = 0; i < list.Count; i++)
         {
 
@@ -68,7 +80,7 @@ public class FormationPosition : MonoBehaviour {
             }
         }
 
-
+        // 鶏たちに配列番号を指定して配列順に鶏を整列させる
         if (list.Count != 0)
         {
             halfSize=Mathf.RoundToInt(Mathf.Sqrt(list.Count));
@@ -102,19 +114,13 @@ public class FormationPosition : MonoBehaviour {
                 }
             }
         }
-
-
-
-        if(isAngry)
-        {
-
-        }
     }
 
 
 
     private void OnTriggerStay(Collider coll)
     {
+        // プレイヤーが鶏を呼び集める
         if (isCluck)
         {
             if (coll.gameObject.tag == "Chicken")
@@ -129,18 +135,6 @@ public class FormationPosition : MonoBehaviour {
                 } 
             }
         }
-
-         if(isAngry)
-        {
-            
-            if (coll.gameObject.tag == "Chicken")
-            {
-                //    var tm = coll.GetComponent<TargetMove>();
-                //    tm.targetPos = pos;
-                //    coll.GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(pos.position);
-                coll.gameObject.GetComponent<TargetMove>().AngryAttack(targetPos.transform.position,20,10f);
-              
-            }
         }
     }
 }

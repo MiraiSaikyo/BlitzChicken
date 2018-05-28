@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   ChickenController.cs
+@brief  鶏が繁殖する処理
+@author 齊藤未来
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,8 +22,10 @@ public class ChickenController : MonoBehaviour {
 
     private void Update()
     {
+        // 一定間隔で鶏が繁殖する
         if (countTime <= 0)
         {
+            // SpawnAreaを確認して鶏の生存が確認できない場合は繁殖する
             while(true)
             {
                 int i = Random.Range(0, spawnArea.Length - 1);
@@ -39,19 +48,10 @@ public class ChickenController : MonoBehaviour {
                     break;
                 }
             }
-
         }
         else
         {
             countTime -= Time.deltaTime;
         }
     }
-
-
-
-
-
-
-
-
 }

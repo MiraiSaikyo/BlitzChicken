@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/// <summary>
+@file   EnemyEditor.cs
+@brief  敵のステータスをInspector上に表示する拡張
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -11,13 +16,9 @@ public class EnemyEditor : Editor {
 	int toolbar=0;
 	public override void OnInspectorGUI()
 	{
-	//	skin=Resources.LoadAssetAtPath<GUISkin>("EnemyEditor");
-
-		
 		EnemyState es=target as EnemyState;
 		
-	　　
-
+		// タブ表示
 		toolbar=GUILayout.Toolbar(toolbar, new string[] { "総ステータス", "部位ステータス", "攻撃ステータス" });
 
 		switch(toolbar)
@@ -31,28 +32,22 @@ public class EnemyEditor : Editor {
 			case 2:
 			AttackView(es);
 			break;
-		}
-	
-	
-	
+		}	
 	}
 
-
-
-
-	
+	// ステータスの初期値と現在値を表示
 	void StateView(EnemyState es)
 	{
-		// 体力の表示
 		EditorGUILayout.LabelField("LIFE(Now/MAX)");
+
 		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.IntField(es.Enemy_Life,GUILayout.Width(48));
-		es.Enemy_Max_Life=EditorGUILayout.IntField(es.Enemy_Max_Life,GUILayout.Width(48));
+		EditorGUILayout.IntField(es.Enemy_Life,GUILayout.Width(48));// 現在のHP
+		es.Enemy_Max_Life=EditorGUILayout.IntField(es.Enemy_Max_Life,GUILayout.Width(48)); // HPの最大値(初期値)
 		EditorGUILayout.EndHorizontal();
 	}
+	// 部位ごとのひるみ値、耐性値を表示
 	void PartsView(EnemyState es)
 	{
-
 		List<Enemy_Parts> list=es.enemy_Parts;
 
 		EditorGUILayout.BeginVertical(GUI.skin.box);
@@ -97,17 +92,15 @@ public class EnemyEditor : Editor {
 
 			}
 		}
-		EditorGUILayout.EndScrollView();
-	
+		EditorGUILayout.EndScrollView();	
 		EditorGUILayout.BeginHorizontal();
 
-		
 		Enemy_Parts ep=EditorGUILayout.ObjectField("Add Parts",null,typeof(Enemy_Parts),true) as Enemy_Parts;
 		if(ep!=null)
 		{
 			list.Add(ep);
 		}
-		if(GUILayout.Button("自動追加"))
+		if(GUILayout.Button("自動追加"))　// このボタン押すとリストがリセットされて全ての部位を取得し直す
 		{
 			list.Clear();
 			var childTrans=es.gameObject.GetComponentsInChildren<Transform>();
@@ -120,10 +113,9 @@ public class EnemyEditor : Editor {
 			}
 		}
 		EditorGUILayout.EndHorizontal();
-
-
 		EditorGUILayout.EndVertical();
 	}
+	// 攻撃ごとの攻撃力を表示
 	void AttackView(EnemyState es)
 	{		
 		List<EnemyAttack> list=es.enemyAttack;
@@ -184,7 +176,7 @@ public class EnemyEditor : Editor {
 		{
 			list.Add(ep);
 		}
-		if(GUILayout.Button("自動追加"))
+		if(GUILayout.Button("自動追加"))// このボタン押すとリストがリセットされて全ての攻撃オブジェクトを取得し直す
 		{
 			list.Clear();
 			var childTrans=es.gameObject.GetComponentsInChildren<Transform>();
@@ -199,7 +191,5 @@ public class EnemyEditor : Editor {
 		EditorGUILayout.EndHorizontal();
 
 		EditorGUILayout.EndVertical();
-	}
-
-	
+	}	
 }

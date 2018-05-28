@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   ParticleStopDestroy.cs
+@brief  パーティクルを止めてからオブジェクトを消す
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

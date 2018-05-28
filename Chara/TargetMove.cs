@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   TargetMove.cs
+@brief  鶏の処理
+@author 齊藤未来
+/// </summary>
+/// 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,7 +14,7 @@ public class TargetMove : MonoBehaviour {
     public int chicken_Life;
     [System.NonSerialized]
     public Vector3 targetPos;
-    public int attackPower=30;
+    public int attackPower=30;// 鶏の攻撃力
 
     // 整列用
     [System.NonSerialized]
@@ -31,20 +38,15 @@ public class TargetMove : MonoBehaviour {
     Vector3 diffusion=Vector3.zero;
     public float randx,randz;
 
-
-
     //particle
     public GameObject[] damageEffect;
     public GameObject kickEffect;
     public GameObject stickEffect;
     bool isStick=false;
 
-    //public GameObject model;
-
     bool isAttack = false;
     bool isInvincible = false;
     bool isDeath = false;
-
 
     FormationPosition formationPosition;
 
@@ -60,7 +62,6 @@ public class TargetMove : MonoBehaviour {
         agent= GetComponent<NavMeshAgent>();
         agent.enabled = true;
         aShot = GetComponent<AudioShot>();
-       // agent.SetDestination(this.transform.position);
     }
     void Update()
     {
@@ -109,20 +110,19 @@ public class TargetMove : MonoBehaviour {
 
         if (!agent.enabled)
         {
+            // 蹴り跳んでる時に壁にぶつかると勢い余って刺さる
             if (c.gameObject.tag == "wall")
             {
-                anim.SetBool("AngryAttack",false);
                 anim.SetBool("Attack", true);
-                GameObject.Find("Timer").GetComponent<Clock>().chicken++;
+                GameObject.Find("Timer").GetComponent<Clock>().chicken++; // 鶏が死亡した数を数える
                 isStick = true;
-                               // GetComponent<TargetMove>().enabled=false;
-
-                number = -2;
+                number = -2;　// 死亡したことを判定するために代入
                 if (stickEffect != null)
                 {
                     Instantiate(stickEffect, c.ClosestPoint(transform.position), transform.rotation);
                 }
             }
+            // 蹴り跳んでいる時に敵にぶつかると敵にダメージを与える
             else if ((number!=-2)&&c.gameObject.tag == "Enemy"&&isAttack)
             {
                 Enemy_ChildParts enemy=c.gameObject.GetComponent<Enemy_ChildParts>();
@@ -145,12 +145,8 @@ public class TargetMove : MonoBehaviour {
                     }
                 }
                 isAttack = false;
-                //Destroy(gameObject);
             }
         }
-
-
-
     }
 
     // 放物線で飛ばす
@@ -172,11 +168,9 @@ public class TargetMove : MonoBehaviour {
     // ダメージ、死亡、蹴られていない時に通る
     void CallMode()
     {
-
         // 呼ばれてるとき
         if (isCall&&(agent.enabled))
         {
-            //rb.isKinematic = true;
             if (!anim.GetCurrentAnimatorStateInfo(0).IsName("getHit"))
             {
                 agent.SetDestination(targetPos + diffusion);
@@ -202,9 +196,7 @@ public class TargetMove : MonoBehaviour {
         // agentがfalse
         if (!agent.enabled)
         {
-            //rb.isKinematic = false;
             parabora();
-            //FallOut();
             anim.SetFloat("Move", 0);
 
         }
@@ -241,6 +233,8 @@ public class TargetMove : MonoBehaviour {
         }
     }
 
+    //
+    // 蹴り飛ばされた時の攻撃判定
     // これだけ唯一攻撃判定にならない
     public void AttackSwitching(float angle,float scalar)
     {
