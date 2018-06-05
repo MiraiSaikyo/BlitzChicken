@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   Clock.cs
+@brief  時間を数え、表示。クエストの成否を判定
+@author 齊藤未来
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +35,7 @@ public class Clock : MonoBehaviour {
 
         for(int i=0;i<3;i++)
         {
-        QuestData.Instance.flag[i]=false;
+        QuestData.Instance.flag[i]=false;　// Questのクリア条件をリセット
         }
     }
 	
@@ -37,6 +44,7 @@ public class Clock : MonoBehaviour {
         if ((chara[0].GetComponent<EnemyState>().Enemy_Life >0)
             &&(chara[1].GetComponent<Player_State>().Player_Life>0))
         {   
+            // 時間数える
             time += Time.deltaTime;
             if(time>10)
             {
@@ -65,13 +73,17 @@ public class Clock : MonoBehaviour {
 
             if((endTime>=10f)&&(!endFlag))
             {
+                //プレイヤーが死亡していた場合Titleに遷移する
                 if(chara[1].GetComponent<Player_State>().Player_Life<=0)
                 {
                     sceneCon.ChangeScene("title");
                 }
+                // 敵が死亡していた場合Resultに遷移する
                 else
                 {
                 sceneCon.ChangeScene("result");
+
+                // Questがクリアされているか確認する
                 if(second[2]<2)
                 {
                     QuestData.Instance.flag[1]=true;   
@@ -84,22 +96,6 @@ public class Clock : MonoBehaviour {
                 }
                 endFlag=true;
             }
-
         }
-    
-
-        //fps=1f/Time.deltaTime;
-
-
 	}
-
-
-    private void OnGUI()
-    {
-        // int iFps=(int)fps;
-
-        // GUILayout.Label(iFps.ToString()+"FPS");
-    //     GUILayout.Label(second[3].ToString()+second[2].ToString()+":"+second[1].ToString()+second[0].ToString());
-    //     GUILayout.Label(chicken.ToString()+"羽やってしまった");
-    }
 }

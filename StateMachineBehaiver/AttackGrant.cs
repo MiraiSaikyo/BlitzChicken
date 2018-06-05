@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   AttackGrant.cs
+@brief  プレイヤーのアニメーターに合わせてオブジェクトを生成
+@author 齊藤未来
+@detalize StateMachineBehaviourを継承しているので注意
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,40 +16,36 @@ public class AttackGrant : StateMachineBehaviour {
     [System.Serializable]
     public struct AttackPara
     {
-        public bool isAttackColl;
-        public string objectPath;
-        public GameObject hitObject;
+        public bool isAttackColl;       // 当たり判定があるか
+        public string objectPath;       // Objectの名前　名前で取得するので被ってると詰む
+        public GameObject hitObject;    // 生成するオブジェクト
         [System.NonSerialized]
-        public Transform hitOffset;//Startで初期化
-        public bool isParent;
-        public bool isIdentity;
+        public Transform hitOffset;     //Startで初期化
+        public bool isParent;           // 親子付けするか
+        public bool isIdentity;　       // 生成する向き
         [SerializeField, Range(0, 1)]
-        public float execute_Time;
+        public float execute_Time;      // 生成されるタイミング
         [System.NonSerialized]
-        public bool isExecute;    //Startで初期化
+        public bool isExecute;          //Startで初期化
         [System.NonSerialized]
-        public GameObject item;
+        public GameObject item;         // 生成されたオブジェクトを一時保存
     }
 
     public AttackPara []attackPara;
 
-
-    
-
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 
+        // 初期化
         for (int i=0;i<attackPara.Length;i++)
         {
             attackPara[i].hitOffset = GameObject.FindWithTag(attackPara[i].objectPath).transform;
             attackPara[i].isExecute = false;
-
         }
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        // 設定した時間になると一度だけ生成
         for (int i = 0; i < attackPara.Length; i++)
         {
             if (attackPara[i].execute_Time < stateInfo.normalizedTime && !attackPara[i].isExecute)
@@ -52,9 +56,8 @@ public class AttackGrant : StateMachineBehaviour {
         }
 
     }
-
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        // 生成したオブジェクトを削除
         for (int i = 0; i < attackPara.Length; i++)
         {
             attackPara[i].isExecute = false;
@@ -63,16 +66,7 @@ public class AttackGrant : StateMachineBehaviour {
         }
     }
 
-    // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
-
-    // OnStateIK is called right after Animator.OnAnimatorIK(). Code that sets up animation IK (inverse kinematics) should be implemented here.
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
-
+    // 生成
     protected void attackInstantiate(GameObject hitObject,Transform hitOffset,bool isParent,bool isIdentity, GameObject item)
     {
 

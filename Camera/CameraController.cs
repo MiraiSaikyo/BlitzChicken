@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   CameraController.cs
+@brief  カメラを切り替える処理
+@author 齊藤未来
+@details　Arbor上でしか使えないので注意
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,19 +31,17 @@ public class CameraController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
-
+        // プレイヤーが死亡したときカメラを変える
         if ((player.GetComponent<Player_State>().Player_Life <= 0) &&
          (!isDeathPlayer))
         {
             isDeathPlayer = true;
-            //playerCamera.SetActive(false);
             playerDeathCamera.SetActive(true);
             audioSource.Stop();
             audioSource.PlayOneShot(audioClip[1]);
         }
 
-
+        // 敵が死亡したときカメラを変える
         else if ((enemy.GetComponent<EnemyState>().Enemy_Life <= 0) &&
             (!isDeathEnemy) &&
             (!isDeathPlayer))
@@ -49,11 +54,10 @@ public class CameraController : MonoBehaviour {
         }
 
 
-
+        // カメラの演出が終わった後に元のカメラに戻す
         if (enemyCamera.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("End")
         ||playerDeathCamera.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("End"))
         {
-            //playerCamera.SetActive(true);
             enemyCamera.SetActive(false);
             playerDeathCamera.SetActive(false);
         }
@@ -61,11 +65,11 @@ public class CameraController : MonoBehaviour {
 
     }
 
+    // 演出に合わせて音を再生
     public IEnumerator BGMTimer(AudioClip ac,float time)
     {
         yield return new WaitForSeconds(time);
         audioSource.PlayOneShot(ac);
-
     }
 
 }

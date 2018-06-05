@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   SetVolume.cs
+@brief  音量の設定
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -6,7 +12,7 @@ using UnityEngine.Audio;
 public class SetVolumes : MonoBehaviour {
 
     [SerializeField]
-    AudioMixer mixer;
+    AudioMixer mixer;　// AudioMixerを取得
 
 
     public float masterVolume
@@ -25,5 +31,4 @@ public class SetVolumes : MonoBehaviour {
     {
         set { mixer.SetFloat("VoiceVolume", Mathf.Lerp(-80, 0, value)); }
     }
-
 }

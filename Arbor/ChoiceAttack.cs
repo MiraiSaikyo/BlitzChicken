@@ -1,4 +1,5 @@
-﻿/// <summary>
+﻿
+/// <summary>
 @file   RandomChoice.cs
 @brief  敵の攻撃をランダムで発動させる
 @author 齊藤未来

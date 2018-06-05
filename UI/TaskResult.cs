@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   TaskResult.cs
+@brief  クエストの成否表示
+@author 齊藤未来
+/// </summary>
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,8 +22,6 @@ public class TaskResult : MonoBehaviour {
 
 	public AudioClip[] ac;
 
-
-
 	// Use this for initialization
 	void Start () {
 		starCounter=0;
@@ -27,23 +32,19 @@ public class TaskResult : MonoBehaviour {
 			flag[i]=QuestData.Instance.flag[i];
 		}
 		StartCoroutine (taskUpdate());  
-
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-
+		// シーンの遷移
 		if((Evaluation.active==true)&&Input.GetButtonDown("Fire1"))
 		{
 			GameObject.Find("SceneController").GetComponent<SceneController>().ChangeScene("title");
 		}
-
-
-
 	}
 
-
+	// クエストがクリアされていた場合に演出をする
 	IEnumerator taskUpdate()
 	{
 		yield return new WaitForSeconds (3f);  
@@ -76,6 +77,7 @@ public class TaskResult : MonoBehaviour {
 
 
 
+		// クエストのクリア数に応じて表示される文字を変える
 		 switch(starCounter)
 		 {
 			 case 1:

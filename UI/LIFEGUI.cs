@@ -1,12 +1,20 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   LIFEGUI.cs
+@brief  LIFEのGUIの表示
+@author 齊藤未来
+/// </summary>
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LIFEGUI : MonoBehaviour {
 
-    public Player_State playerState;
-    public EnemyState EnemyState;
+    public Player_State playerState; // プレイヤーのHP
+    public EnemyState EnemyState; // 敵のHP
 
     int Life;
     Image image;
@@ -32,7 +40,6 @@ public class LIFEGUI : MonoBehaviour {
         else
         {
             image.fillAmount = (float)EnemyState.Enemy_Life / Life;
-
         }
 
     }
