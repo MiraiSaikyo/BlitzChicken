@@ -11,14 +11,12 @@ using UnityEngine;
 
 public class ChickenController : MonoBehaviour {
 
-
     public SpawnPoint[] spawnArea;
     public GameObject chicken;
 
     float countTime = 0;
     private List<int> randomList = new List<int>();
     int count = 0;
-
 
     private void Update()
     {

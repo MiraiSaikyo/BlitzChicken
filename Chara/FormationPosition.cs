@@ -17,17 +17,15 @@ public class FormationPosition : MonoBehaviour {
     public float distance;
 
     public Transform FormationPos;
-
     public Transform adsPoint;
     GameObject[] chicken;
     public int chickenLength;
-
     public List<GameObject> list = new List<GameObject>();
     int halfSize;
-    
     public float offset;
     public bool isCluck = false;
     public bool isAngry=false;
+
     private void Update()
     {
         chickenLength = list.Count;
@@ -47,11 +45,8 @@ public class FormationPosition : MonoBehaviour {
             FormationPos.position = Vector3.Lerp(FormationPos.position, 
             adsPoint.position+new Vector3(0,0.3f), 100 * Time.deltaTime);
             FormationPos.LookAt(adsPoint);
-
-            //FormationPos.position = new Vector3(FormationPos.position.x, targetPos.transform.position.y, FormationPos.position.z);
             offset =0.3f;
         }
-
 
         // プレイヤーの移動に少し遅れて追従する
         Vector3 Apos = FormationPos.position;
@@ -66,7 +61,6 @@ public class FormationPosition : MonoBehaviour {
         // 鶏が配列から抜けた時の処理
         for (int i = 0; i < list.Count; i++)
         {
-
             if(list[i]==null)
             {
                 list.RemoveAt(i);
@@ -76,7 +70,6 @@ public class FormationPosition : MonoBehaviour {
             {
                 list[i].GetComponent<NavMeshAgent>().enabled = false;
                 list.RemoveAt(i);
-                
             }
         }
 
@@ -100,23 +93,15 @@ public class FormationPosition : MonoBehaviour {
                         }
                         else
                         {
-                            //list[i].GetComponent<NavMeshAgent>().SetDestination(
-                            //       (FormationPos.position 
-                            //    + (FormationPos.forward  * (i-(list.Count/halfSize*j)-halfSize/2)*offset)
-                            //    + (FormationPos.right  * ((j - halfSize / 2)))*offset));
-
                             list[i].GetComponent<TargetMove>().targetPos = (FormationPos.position
                                 + (FormationPos.forward * (i - (list.Count / halfSize * j) - halfSize / 2) * offset)
                                 + (FormationPos.right * ((j - halfSize / 2))) * offset);
                         }
                     }
-                    
                 }
             }
         }
     }
-
-
 
     private void OnTriggerStay(Collider coll)
     {
@@ -125,9 +110,6 @@ public class FormationPosition : MonoBehaviour {
         {
             if (coll.gameObject.tag == "Chicken")
             {
-                //    var tm = coll.GetComponent<TargetMove>();
-                //    tm.targetPos = pos;
-                //    coll.GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(pos.position);
                 if (coll.gameObject.GetComponent<TargetMove>().number == -1)
                 {
                     list.Add(coll.gameObject);
@@ -135,6 +117,6 @@ public class FormationPosition : MonoBehaviour {
                 } 
             }
         }
-        }
     }
 }
+

@@ -1,8 +1,10 @@
-﻿/// <summary>
+﻿
+/// <summary>
 @file   Player_Parts.cs
 @brief  プレイヤーの部位毎の当たり判定
 @author 齊藤未来
 /// </summary>
+/// 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,8 +21,6 @@ public class Player_Parts : MonoBehaviour {
     public void Damage(int power)
     {
         player.Player_Life -= power;
-        //Enemy_Life -= power;
-
     }
 
 }

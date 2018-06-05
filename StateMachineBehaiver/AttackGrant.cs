@@ -12,7 +12,6 @@ using UnityEngine;
 
 public class AttackGrant : StateMachineBehaviour {
 
-
     [System.Serializable]
     public struct AttackPara
     {
@@ -33,9 +32,8 @@ public class AttackGrant : StateMachineBehaviour {
 
     public AttackPara []attackPara;
 
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) 
+    {
         // 初期化
         for (int i=0;i<attackPara.Length;i++)
         {
@@ -44,7 +42,8 @@ public class AttackGrant : StateMachineBehaviour {
         }
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) 
+    {
         // 設定した時間になると一度だけ生成
         for (int i = 0; i < attackPara.Length; i++)
         {
@@ -54,22 +53,21 @@ public class AttackGrant : StateMachineBehaviour {
                 attackInstantiate(attackPara[i].hitObject, attackPara[i].hitOffset, attackPara[i].isParent,attackPara[i].isIdentity, attackPara[i].item);
             }
         }
-
     }
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) 
+    {
         // 生成したオブジェクトを削除
         for (int i = 0; i < attackPara.Length; i++)
         {
             attackPara[i].isExecute = false;
             Destroy(attackPara[i].item);
-
         }
     }
 
     // 生成
     protected void attackInstantiate(GameObject hitObject,Transform hitOffset,bool isParent,bool isIdentity, GameObject item)
     {
-
         if (isParent)
         {
             item = Instantiate(hitObject, hitOffset.position, hitOffset.rotation) as GameObject;

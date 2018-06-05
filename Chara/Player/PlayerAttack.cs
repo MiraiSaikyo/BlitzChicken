@@ -18,7 +18,6 @@ public class PlayerAttack : MonoBehaviour
     float angle;
     float scale;
 
-
     public float time;
     public float hitStopTime;
     public GameObject kickEffect;
@@ -38,9 +37,7 @@ public class PlayerAttack : MonoBehaviour
         Normal,Diffusion,Upper
     }
     public shotPaturn shot;
-
     public LayerMask mask;
-
     public bool isCharge;
     bool flag=false;
 
@@ -49,8 +46,6 @@ public class PlayerAttack : MonoBehaviour
         angle = anglePercent * 10f;
         scale = scalePersent * 10f;
 
-
-        //ps = transform.root.gameObject.GetComponent<Player_State>() ;
         ps = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_State>();
         if ((time != 0)&&(!isCharge))
         {
@@ -91,6 +86,7 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    // ADS状態の時の蹴り方
     void AdsAttack(Collider hit)
     {
         ps.isHitStop = true;
@@ -111,7 +107,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     // 
-    // 敵を蹴った時の処理
+    // 鶏を蹴った時の処理
     // 普通の蹴り
     void Normal()
     {

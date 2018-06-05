@@ -11,24 +11,15 @@ public class LockOnList : MonoBehaviour {
     public Camera2 camera;
     [System.NonSerialized]
     public bool isCursor=false;
-    private void Start()
-    {
-    }
-
+ 
     private void Update()
     {
-
         isCursor = camera.GetComponent<Camera2>().isLockOn;
 
         if (isCursor)
         {
-           
             Cursor.transform.LookAt(Camera.main.transform);
             Cursor.transform.position = lockParts[value].transform.position;
         }
-        else
-        {
-        }
     }
-
 }

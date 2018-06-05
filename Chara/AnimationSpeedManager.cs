@@ -15,15 +15,13 @@ public class AnimationSpeedManager : MonoBehaviour {
     [System.NonSerialized]
     public float speed=1;
 
-
     public float hitStopTime;
     public bool isHitStop;
-	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isHitStop)
@@ -35,6 +33,7 @@ public class AnimationSpeedManager : MonoBehaviour {
             anim.speed = speed;
         }
     }
+
     void startHitStop()
     {
         if (isHitStop)
@@ -46,6 +45,7 @@ public class AnimationSpeedManager : MonoBehaviour {
             anim.speed = speed;
         }
     }
+    
     public IEnumerator attackHitStop(Animator animator, float stopTime)// ヒットストップ
     {
         animator.speed = 0.1f; // アニメーションの再生スピードを落とす

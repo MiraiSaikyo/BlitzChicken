@@ -1,19 +1,26 @@
-﻿using System.Collections;
+﻿
+/// <summary>
+@file   TargetCamera.cs
+@brief  プレイヤーを追従する処理
+@author 齊藤未来
+/// </summary>
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Camera2 : MonoBehaviour {
 
-    // 
     public GameObject player;
-    public  GameObject mainCamera;
+    public GameObject mainCamera;
+    public LayerMask mask;
 
     //特定の座標
     public GameObject cameraPos;
-    public Transform adsPoint;
-    public Transform endPoint;
-    public Transform deathPoint;
-    
+    public Transform  adsPoint;
+    public Transform  endPoint;
+    public Transform  deathPoint;
+    public float clampValue=10;
+
     //カメラの感度
     public  float sensibility;
     
@@ -26,43 +33,34 @@ public class Camera2 : MonoBehaviour {
     // ロックオンする機能
     private GameObject     lockOnTarget;
     private LockOnDetector lod;
-    public bool isLockOn;
-    public bool isAds;
-
-    public LayerMask mask;
+    public bool            isLockOn;
+    public bool            isAds;
 
     // カメラを揺らす機能
     private float lifeTime;
     private float shakeRange;
 
-    bool isPlayerDeath;
+    private bool isPlayerDeath;
 
-    // Use this for initialization
     void Start () {
         mainCamera = Camera.main.gameObject;
-        //target = GameObject.FindGameObjectWithTag("XXXX");  
         endPoint.position = mainCamera.transform.position;
         lod = GetComponent<LockOnDetector>();
         lifeTime = 0f;
         shakeRange = 0f;
 	}
 
-    // Update is called once per frame
     void Update() {
         RotateClamp(angleLimit_Min, angleLimit_Max);
 
-        if (player.GetComponent<Player_State>().isDeath)
-        {
-            //mainCamera.transform.position = deathPoint.position;
-            //mainCamera.transform.rotation = deathPoint.rotation;
-            // GetComponent<Animator>().enabled = true;
-        }
-        else
+        if (player.GetComponent<Player_State>().!isDeath)
         {
             transform.position = cameraPos.transform.position;
-            AdsMode(Input.GetAxis("R_Trigger") <= -0.9f, 10);
+           
+            AdsMode(Input.GetAxis("R_Trigger") <= -0.9f, clampValue);
             RayZoom();
-             LockOnMode();
+            LockOnMode();
+            // ターゲットが指定されている場合ロックオンモードに移行する
             if (lockOnTarget)
             {
                 TargetLockOn(lockOnTarget);
@@ -78,35 +76,27 @@ public class Camera2 : MonoBehaviour {
         RotateClamp(angleLimit_Min, angleLimit_Max);
     }
 
-
-
     //入力されるとカメラの向きが変わる
     void RotateCameraAngle()
     {
         if (isLockOn)
         {
-           Vector3 angle = new Vector3(
-         Input.GetAxis("Mouse Y") * sensibility, 0);
-
-           transform.eulerAngles += new Vector3(AngleClamp(angle.x, -10, 10), 0);
+           // カメラのY軸だけ動かすことができる
+           Vector3 angle = new Vector3(Input.GetAxis("Mouse Y") * sensibility, 0);
+           transform.eulerAngles += new Vector3(AngleClamp(angle.x, -clampValue, clampValue), 0);
         }
         else
         {
-            Vector3 angle = new Vector3(
-              Input.GetAxis("Mouse Y") * sensibility,
-                Input.GetAxis("Mouse X") * sensibility,
-                0);
-            transform.eulerAngles += new Vector3(AngleClamp(angle.x, -10,10), angle.y);
+            Vector3 angle = new Vector3(Input.GetAxis("Mouse Y") * sensibility,Input.GetAxis("Mouse X") * sensibility,0);
+            transform.eulerAngles += new Vector3(AngleClamp(angle.x, -clampValue,clampValue), angle.y);
         }
     }
-    
     //カメラが引数のオブジェクトの方向を向く
     void TargetLockOn(GameObject Lock)
     {
         Quaternion myQ = Quaternion.LookRotation((Lock.transform.position-mainCamera.transform.position).normalized);
-        transform.rotation = Quaternion.Lerp(transform.rotation, myQ, 10 * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, myQ, clampValue * Time.deltaTime);
         transform.eulerAngles-=new Vector3(0,0,transform.localEulerAngles.z);
-        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
     } 
     //入力されるとロックオンモードになる
     void LockOnMode()
@@ -132,21 +122,19 @@ public class Camera2 : MonoBehaviour {
                 lockOnTarget = null;
                 isLockOn = false;
             }
-       
         }
     }
 
     // カメラが寄る
-    void AdsMode(bool xflag, float speed)
+    void AdsMode(bool isInput, float speed)
     {
-        if (xflag)
+        if (isInput)
         {
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, adsPoint.position, speed * Time.deltaTime);
             isAds = true;
         }
         else
         {
-            //mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, endPoint.position, speed * Time.deltaTime);
             isAds = false;
         }
     }
@@ -166,19 +154,9 @@ public class Camera2 : MonoBehaviour {
     //Y軸の回転制限 
     float AngleClamp(float angle,float min,float max)
     {
-       if(angle<-360)
-        { angle += 360; }
-       if(angle>360)
-        { angle -= 360; }
+       if(angle<-360) { angle += 360; }
+       if(angle>360)  { angle -= 360; }
         return Mathf.Clamp(angle, min, max);
-    }
-    void RotateClamp(float min,float max)
-    {
-        float angle_x = 180f <= transform.eulerAngles.x ? transform.eulerAngles.x - 360 : transform.eulerAngles.x;
-        transform.eulerAngles = new Vector3(
-            Mathf.Clamp(angle_x, min, max),
-            transform.eulerAngles.y,
-            transform.eulerAngles.z);
     }
 
     // 壁越しとかになるとプレイヤーにカメラが寄る
@@ -194,14 +172,9 @@ public class Camera2 : MonoBehaviour {
             else
             {
                 mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, endPoint.position, 5 * Time.deltaTime);
-                //mainCamera.transform.position = endPoint.position;
             }
         }
-
-        //Debug.DrawRay(transform.position, ( endPoint.position- transform.position ).normalized);
     }
-
-
 
     // カメラを揺らす
     void Shake()
@@ -220,6 +193,4 @@ public class Camera2 : MonoBehaviour {
         lifeTime = setTime;
         shakeRange = setRange;
     }
-
-
 }

@@ -31,12 +31,12 @@ public class TargetRotate : StateBehaviour {
         target = GameObject.FindGameObjectWithTag("Player").transform.position;
     }
 
-    // Update is called once per frame
-    void Update() {
+    void Update() 
+    {
         // プレイヤーの方向を取得
         Vector3 vec = new Vector3(target.x, 0, target.z) - new Vector3(transform.position.x, 0, transform.position.z);
 
-        // プレイヤーの方向に対して自分の向きの差がangleOffset以下の場合次の処理へ
+        // プレイヤーの方向に対して自分の向きの差がangleOffset以下なら攻撃このステートを通過
         if (Vector3.Angle(vec.normalized, transform.forward) <= angleOffset)
         {
             Transition(NextScene);
@@ -45,7 +45,7 @@ public class TargetRotate : StateBehaviour {
         }
         else
         {
-            // 回転はアニメーションでしている
+            // 回転自体はアニメーションでしている
 
             // 右回転
             if (vec.x>=angleOffset)

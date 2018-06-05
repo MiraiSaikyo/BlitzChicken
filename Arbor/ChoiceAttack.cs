@@ -1,6 +1,6 @@
 ﻿
 /// <summary>
-@file   RandomChoice.cs
+@file   ChoiceAttack.cs
 @brief  敵の攻撃をランダムで発動させる
 @author 齊藤未来
 @details　Arbor上でしか使えないので注意
@@ -17,24 +17,22 @@ public class ChoiceAttack : StateBehaviour {
     [SerializeField]
     Transform target; // 自分との距離を測るためにプレイヤーの座標を取得
    
-
     // 重みと遷移先
     int[] weight;
     [System.Serializable]
     public class WeightV
     {
-        public int[] weightValue;
-        public float distance;
-       
+        public int[] weightValue;   // 攻撃の重み
+        public float distance;      // 距離
     }
     [SerializeField]
-    public WeightV[] weightV;
+    public WeightV[] weightV=new weightV();
 
-    int distance;
+    int distance;  
     public StateLink[] NextScene;
-    // Use this for enter state
-    public override void OnStateBegin() {
-        //weight=new int[0];
+
+    public override void OnStateBegin() 
+    {
 
         // プレイヤーのTransformを取得
         target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -71,9 +69,9 @@ public class ChoiceAttack : StateBehaviour {
             }
         }
     }
-
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         var index = GetRandomIndex(weight);
         Transition(NextScene[index]);
 	}
@@ -94,5 +92,4 @@ public class ChoiceAttack : StateBehaviour {
         }
         return retIndex;
     }
-
 }

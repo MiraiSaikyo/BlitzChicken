@@ -68,6 +68,7 @@ public class SpawnPoint : MonoBehaviour {
             chickenList.Add(item);
         }
     }
+    
     // 繁殖した鶏を保存する
     void RemoveList(List<GameObject> list)
     {

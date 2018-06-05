@@ -21,21 +21,20 @@ public class Clock : MonoBehaviour {
     bool endFlag;
 	// Use this for initialization
 	void Start () {
-        for(int i=0;i<second.Length;i++)
-        {
-            second[i]=0;
-        }
-
+      
         fps=0;
         time = 0;
         endTime=0;
         endFlag=false;
         chicken = 0;
-        
 
+        for(int i=0;i<second.Length;i++)
+        {
+            second[i]=0;
+        }
         for(int i=0;i<3;i++)
         {
-        QuestData.Instance.flag[i]=false;　// Questのクリア条件をリセット
+            QuestData.Instance.flag[i]=false;　// Questのクリア条件をリセット
         }
     }
 	

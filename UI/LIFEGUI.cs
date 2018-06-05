@@ -5,7 +5,6 @@
 @author 齊藤未来
 /// </summary>
 
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,8 +17,9 @@ public class LIFEGUI : MonoBehaviour {
 
     int Life;
     Image image;
-    // Use this for initialization
-    void Start () {
+
+    void Start () 
+    {
         image = GetComponent<Image>();
         if (playerState != null)
         {
@@ -31,8 +31,8 @@ public class LIFEGUI : MonoBehaviour {
         }
     }
 	
-	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         if (playerState != null)
         {
             image.fillAmount= (float)playerState.Player_Life/Life;
@@ -41,6 +41,5 @@ public class LIFEGUI : MonoBehaviour {
         {
             image.fillAmount = (float)EnemyState.Enemy_Life / Life;
         }
-
     }
 }

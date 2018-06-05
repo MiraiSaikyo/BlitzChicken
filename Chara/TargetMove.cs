@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class TargetMove : MonoBehaviour {
+   
     public int chicken_Life;
     [System.NonSerialized]
     public Vector3 targetPos;
@@ -42,14 +43,13 @@ public class TargetMove : MonoBehaviour {
     public GameObject[] damageEffect;
     public GameObject kickEffect;
     public GameObject stickEffect;
-    bool isStick=false;
 
+    bool isStick=false;
     bool isAttack = false;
     bool isInvincible = false;
     bool isDeath = false;
 
     FormationPosition formationPosition;
-
     Rigidbody rb;
     Animator anim;
     NavMeshAgent agent;
@@ -65,7 +65,6 @@ public class TargetMove : MonoBehaviour {
     }
     void Update()
     {
-        
         {
             if (!isDeath && !isInvincible && !isStick)
             {
@@ -73,7 +72,6 @@ public class TargetMove : MonoBehaviour {
             }
             else if (isDeath||isStick)
             {
-
                 number = -2;
                 isCall = false;
                 isAttack = false;
@@ -91,7 +89,6 @@ public class TargetMove : MonoBehaviour {
                 {
                     isInvincible = false;
                 }
-
             }
         }
     }
@@ -102,9 +99,7 @@ public class TargetMove : MonoBehaviour {
         {
             anim.SetBool("Attack", false);
             anim.SetBool("AngryAttack",false);
-
             agent.enabled = true;
-            //agent.updatePosition = true ;
         }
 
 
@@ -132,7 +127,7 @@ public class TargetMove : MonoBehaviour {
                 {
                     if(i==damageEffect.Length-1)
                     {
-                    var item=Instantiate(damageEffect[i], transform.position, Quaternion.identity) as GameObject;
+                        var item=Instantiate(damageEffect[i], transform.position, Quaternion.identity) as GameObject;
                     }
 
                     else if(defence<=((i+1)*25))
@@ -177,16 +172,17 @@ public class TargetMove : MonoBehaviour {
             }
             anim.SetFloat("Move", agent.velocity.magnitude);
         }
-         // 呼ばれていなかった場合呼ばれる 整列用
+
+        // 呼ばれていなかった場合呼ばれる 整列用
         if ((number != -1) && (!isCall))
         {
             float _x = Random.Range(-randx, randx);
             float _z = Random.Range(-randz, randz);
             diffusion = new Vector3(_x, 0, _z);
-
             isCall = true;
             anim.SetTrigger("Call");
         }
+
         // 一度も呼ばれていない場合
         else if (number == -1)
         {
@@ -198,8 +194,8 @@ public class TargetMove : MonoBehaviour {
         {
             parabora();
             anim.SetFloat("Move", 0);
-
         }
+
         // agentがtrue
         else
         {
@@ -210,11 +206,10 @@ public class TargetMove : MonoBehaviour {
                 agent.Warp(hit.position);
             }
         }
-
-       
-
     }
-    public void Damage(int power)// ダメージ処理
+
+    // ダメージ処理
+    public void Damage(int power)
     {
         if ((!isDeath)&&(!isInvincible)&&(!isAttack))
         {
@@ -319,7 +314,7 @@ public class TargetMove : MonoBehaviour {
 
     }
 
-public void AttackSwitching(Vector3 cPosition,Vector3 forward,Vector3 vec,float angle,float scalar,float time)
+    public void AttackSwitching(Vector3 cPosition,Vector3 forward,Vector3 vec,float angle,float scalar,float time)
     {
 
         agent.enabled = false;
@@ -353,21 +348,5 @@ public void AttackSwitching(Vector3 cPosition,Vector3 forward,Vector3 vec,float 
 
 
     }
-
-    public void AngryAttack(Vector3 vec,float angle,float scalar)
-    {
-        agent.enabled = false; 
-        anim.SetBool("AngryAttack", true);
-
-        vec-=transform.position;
-        transform.localRotation = Quaternion.LookRotation(vec);
-        // 飛ばす為の初期化
-        _transform = transform;
-        isAttack = true;
-        viY = Mathf.Sin(angle * Mathf.Deg2Rad) * scalar;
-        viX = Mathf.Cos(angle * Mathf.Deg2Rad) * scalar;
-    }
-
-   
 }
 

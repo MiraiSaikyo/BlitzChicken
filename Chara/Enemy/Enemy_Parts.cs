@@ -3,12 +3,12 @@
 @brief  敵の当たり判定を一つの部位にまとめてダメージ計算
 @author 齊藤未来
 /// </summary>
+/// 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy_Parts : MonoBehaviour {
-
 
     public string partsName; // Editorで取得するために名前を決めとく
     EnemyState enemy;
@@ -24,15 +24,15 @@ public class Enemy_Parts : MonoBehaviour {
     float resistance=0.2f;
     int stunInit;
 	
-    // Use this for initialization
-	void Start () {
+	void Start () 
+    {
         stunInit = stunValue;
         enemy=transform.root.gameObject.GetComponent<EnemyState>();
         defenceValue=defensePower/defenseRate; // 防御力を計算
 	}
 
-    void Update() {
-
+    void Update() 
+    {
         // ひるみ値が0以下になるとひるむ
         if (stunValue <= 0)
         {
@@ -43,6 +43,7 @@ public class Enemy_Parts : MonoBehaviour {
             }
         }
     }
+
     public void Damage(int power)
     {
         // HPが0より大きかったらダメージ計算をする
@@ -53,6 +54,7 @@ public class Enemy_Parts : MonoBehaviour {
             stunValue -= power; // スタン値を減算
         }
     }
+    
     public float getDefenceValue()
     {
         return defenceValue; //　防御力

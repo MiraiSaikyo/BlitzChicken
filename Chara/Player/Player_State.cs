@@ -14,16 +14,17 @@ public class Player_State : MonoBehaviour
 {
     //public//
     public static Vector3 initGravity = new Vector3(0f, Physics.gravity.y, 0f);// 重力
+   
     public int Player_Life = 100;　　// プレイヤーのヒットポイント
     public float move;  // プレイヤーの移動力
     public float jump;  // ジャンプ力
     public float rotate;// 回転力
     public float hitStopTime;
     [System.NonSerialized]
-    public float speed = 1;
+    public float speed = 1; // ヒットストップの時間
     [System.NonSerialized]
     public bool isHitStop;
-    public LayerMask mask;//RaycastのMask;
+    public LayerMask mask;
     public bool isDeath = false;
 
     //private変数//
@@ -40,7 +41,6 @@ public class Player_State : MonoBehaviour
     private Vector3 velocityPower = Vector3.zero;// この変数をVeloctyに代入する
     private Vector3 Gravity       = Vector3.zero;// 重力計算用
     private bool isAttack     = false; // 攻撃用
-    public bool isAds      = false; // ブリッツ用
     private bool isGround     = true;  // 地面と接しているか
     private bool isRaycast    = true;  // Raycastを投げるか
     private bool isJump       = false; // ジャンプをするか
@@ -48,7 +48,6 @@ public class Player_State : MonoBehaviour
     private bool isInvincible = false; // ダメージ後の無敵用
 
     bool isRun=false;
-    public bool pause=false;
 
     // プレイヤーの状態
     public enum Mode
@@ -125,17 +124,15 @@ public class Player_State : MonoBehaviour
             isDeath = true;
             isAttack = false;
         }
-
-
-
     }
+
     void FixedUpdate()
     {
         rb.velocity = velocityPower;
     }
 
-
-    public void Damage(int power)// ダメージ処理
+    // ダメージ処理
+    public void Damage(int power)
     {
         if (!isInvincible)
         {
@@ -148,22 +145,23 @@ public class Player_State : MonoBehaviour
                 anim.SetBool("jump", false);
                 anim.SetBool("Step", false);
                 isInvincible = true;
-
                 isAttack = false;
                 anim.SetTrigger("Wound");
-                //chickenState = Mode.Invincible;
             }
         }
     }
+
     // 移動量を代入
     public void SetVelocity(Vector3 velo)
     {
         velocityPower = velo;
     }
+
     public void ResetGravity()
     {
         Gravity = Vector3.zero;
     }
+
     // ヒットストップ
     public IEnumerator attackHitStop(Animator animator, float stopTime)
     {
@@ -175,6 +173,7 @@ public class Player_State : MonoBehaviour
         animator.speed = 1f;
         isHitStop = false;
     }
+
     // 入力の管理
     void ActionCommand()
     {
@@ -182,13 +181,14 @@ public class Player_State : MonoBehaviour
         SetVelocity(MoveExecute(move));
         PlayerMove();
     }
+
     // 攻撃の管理
     void AttackExecute()
     {
-        
         anim.SetFloat("move", 0f);
         PlayerMove();
     }
+
     // ジャンプの管理
     void JumpExecute()
     {
@@ -213,15 +213,7 @@ public class Player_State : MonoBehaviour
             Gravity.y = GravityLimit;
         }
     }
-    // 無敵状態の管理
-    void InvincibleExecute()
-    {
-        // if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-        // {
-        //     isInvincible = false;
-        //     //chickenState = Mode.Idle;
-        // }
-    }
+ 
     // プレイヤーの移動,回転の管理
     void PlayerMove()
     {
@@ -253,14 +245,11 @@ public class Player_State : MonoBehaviour
 
                 if (Input.GetButton("R_Button") && (inputPower>=0.8))
                 {
-
                     inputPower = moveForward.magnitude + 0.2f;
-
                 }
                 else
                 {
                     inputPower = moveForward.magnitude;
-                    
                 }
             }
             else
@@ -270,28 +259,23 @@ public class Player_State : MonoBehaviour
             }
         }
         anim.SetFloat("move", inputPower);
-       
     }
+
     // 前方向にRaycastを投げ移動量を制限する
     void OnRaycast()
     {
         Ray ray = new Ray(transform.position + new Vector3(0, 0.2f, 0), transform.forward);
-
         RaycastHit hit;
         if (Physics.SphereCast(ray, 0.2f, out hit, 0.2f))
         {
             SetVelocity(new Vector3(velocityPower.x, velocityPower.y, 0));
         }
-        else
-        {
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, range, false);
-        }
     }
+
     // 地面と接しているかを判定
     void OnGroundRaycast()
     {
         Ray ray = new Ray(transform.position + new Vector3(0, range+0.1f, 0), transform.up * -1);
-
         RaycastHit hit;
         if (isRaycast)
         {
@@ -299,18 +283,11 @@ public class Player_State : MonoBehaviour
             {
                 isGround = true;
                 anim.SetBool("Fall", false);
-                // anim.SetBool("jump", false);
             }
             else
             {
-                Debug.DrawRay(ray.origin, ray.direction, Color.red, range, false);
-
-                
-               //chickenState = Mode.Jump;
-               
                 isGround = false;
                 anim.SetBool("Fall", true);
-                //anim.SetBool("jump", true);
             }
         }
         else
@@ -318,7 +295,6 @@ public class Player_State : MonoBehaviour
             time += Time.deltaTime;
             if (time > 0.5f)
             {
-                //
                 time = 0f;
                 isRaycast = true;
             }
@@ -328,7 +304,7 @@ public class Player_State : MonoBehaviour
     {
         if (isHitStop)
         {
-            //StartCoroutine(attackHitStop(anim, hitStopTime));
+            StartCoroutine(attackHitStop(anim, hitStopTime));
         }
         else
         {

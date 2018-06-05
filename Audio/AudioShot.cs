@@ -13,8 +13,8 @@ public class AudioShot : MonoBehaviour {
     AudioSource audioSource;
     public AudioClip[] clip;
 
-	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
         audioSource = GetComponent<AudioSource>();
 	}
 	

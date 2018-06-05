@@ -3,7 +3,6 @@
 @file   CameraController.cs
 @brief  カメラを切り替える処理
 @author 齊藤未来
-@details　Arbor上でしか使えないので注意
 /// </summary>
 using System.Collections;
 using System.Collections.Generic;
@@ -23,17 +22,16 @@ public class CameraController : MonoBehaviour {
     public AudioSource audioSource;
     public AudioClip[] audioClip;
 
-    // Use this for initialization
-    void Start() {
-        enemyCamera.SetActive(false);
-        
+    void Start() 
+    {
+        enemyCamera.SetActive(false); 
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update
+    {
         // プレイヤーが死亡したときカメラを変える
-        if ((player.GetComponent<Player_State>().Player_Life <= 0) &&
-         (!isDeathPlayer))
+        if ((player.GetComponent<Player_State>().Player_Life <= 0) && (!isDeathPlayer))
         {
             isDeathPlayer = true;
             playerDeathCamera.SetActive(true);
@@ -42,17 +40,13 @@ public class CameraController : MonoBehaviour {
         }
 
         // 敵が死亡したときカメラを変える
-        else if ((enemy.GetComponent<EnemyState>().Enemy_Life <= 0) &&
-            (!isDeathEnemy) &&
-            (!isDeathPlayer))
+        else if ((enemy.GetComponent<EnemyState>().Enemy_Life <= 0) &&(!isDeathEnemy) &&(!isDeathPlayer))
         {
-           // playerCamera.SetActive(false);
             enemyCamera.SetActive(true);
             isDeathEnemy = true;
             audioSource.Stop();
             audioSource.PlayOneShot(audioClip[0]);
         }
-
 
         // カメラの演出が終わった後に元のカメラに戻す
         if (enemyCamera.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("End")
@@ -61,8 +55,6 @@ public class CameraController : MonoBehaviour {
             enemyCamera.SetActive(false);
             playerDeathCamera.SetActive(false);
         }
-
-
     }
 
     // 演出に合わせて音を再生
@@ -71,5 +63,4 @@ public class CameraController : MonoBehaviour {
         yield return new WaitForSeconds(time);
         audioSource.PlayOneShot(ac);
     }
-
 }
